@@ -38,19 +38,13 @@ export default class UserManagement {
     }
 
 
-    static saveInvite(userType: string, user: object, option: string) {
+    static inviteButton(userType: string, user: object, option: string) {
         // enter save
         cy.datacyClick(option)
         // verify info saved
+        
         cy.visible('User invited successfully')
         cy.checkContent(userType, user, 'contain.text')
-    }
-
-    static cancelInvite(userType: string, user: object) {
-        // enter cancel
-        cy.datacyClick('cancel')
-        // verify no info added
-        cy.checkContent(userType, user, 'not.contain.text')
     }
 
     static errorMessage(mess: string, length: number) {
