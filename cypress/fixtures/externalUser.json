@@ -1,0 +1,13 @@
+    {
+        "Salutation": "Ms",
+        "FirstName": "Hermiony",
+        "LastName": "Granger",
+        "Email": "her@hogwards.com",
+        "Phone": "+975 17 59 43 49",
+        "Role" : " Admin ",
+        "Language" : " English ",
+        "Type" : "Informal",
+        "SignOrderOnline": "Yes",
+        "CustomerName": "Vivi",
+        "error" : "Please select from the auto-suggested list"
+    }
