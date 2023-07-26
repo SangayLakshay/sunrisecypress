@@ -58,12 +58,12 @@ export default class UserManagement {
         })
     }
 
-    static editUser(email: string) {
-        // select the edit button using email
-        // check popup form
-        // enter new info
-        // save and verify the new info  
-    }
+    // static editUser(email: string) {
+    //     // select the edit button using email
+    //     // check popup form
+    //     // enter new info
+    //     // save and verify the new info  
+    // }
 
     static deleteUser(confirmation: string) {
         // check pop up
