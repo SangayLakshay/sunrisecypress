@@ -15,6 +15,8 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+//support/command.ts
+import 'cypress-mailosaur';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
@@ -33,7 +35,7 @@ declare global {
         selectOption(dataCy: string, input: string): Chainable<Element>
         login(email: string, password: string): Chainable<Element>
         userType(type: string): Chainable<Element>
-        checkContent(userType: string, user: object, visibility: string): Chainable<Element>
+        checkContent(userType: string, user: object): Chainable<Element> 
       }
     }
   }

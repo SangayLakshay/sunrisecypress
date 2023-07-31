@@ -11,7 +11,6 @@ Cypress.Commands.add('selection', (selector: string) => { cy.contains(selector).
 
 Cypress.Commands.add('datacyClick', (selector: string) => { cy.datacy(selector).click()})
 
-
 Cypress.Commands.add('typeInput', (dataCy: string, input: string) => {
     cy.datacyClick(dataCy)
     cy.datacy(dataCy).within(() => {
@@ -44,13 +43,3 @@ Cypress.Commands.add('userType', (type: string) => {
         cy.datacyClick(type)
     })
 })
-
-Cypress.Commands.add('checkContent', (userType: string, user: object, visibility: string) => { 
-    cy.selection(userType).then(() => {
-        cy.contains(user['Email']).parent('.tr').then(($ele) => {
-            cy.wrap($ele).as('userRow')
-            
-        })
-    })
-})
-

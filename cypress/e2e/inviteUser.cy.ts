@@ -25,11 +25,23 @@ describe('Admin user', () => {
 
   it('should enter internal user form', () => {
     UserManagement.inviteUsers(internalUser, "Internal Users")
-    // UserManagement.saveInvite('Internal Users', internalUser)
+    cy.datacyClick('Add User').then(() => {
+      cy.visible('User invited successfully')
+      cy.wait(5000)
+      UserManagement.searchUser("Internal Users", internalUser)
+    })
+  })
 
+  it('should click on the invite user', () => {
+    UserManagement.clickInviteUser()
   })
 
   it('should enter external user form', () => {
     UserManagement.inviteUsers(externalUser, "External Users")
+    cy.datacyClick('Add User').then(() => {
+      cy.visible('User invited successfully')
+      cy.wait(5000)
+      UserManagement.searchUser('External Users', externalUser)
+    })
   })
 })

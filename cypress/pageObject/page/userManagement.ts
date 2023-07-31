@@ -1,3 +1,5 @@
+import { tablePages } from "../components/tablePagination"
+
 export default class UserManagement {
     static getUserPage() {
         cy.datacyClick('config')
@@ -12,16 +14,12 @@ export default class UserManagement {
     }
 
     static clickInviteUser() {
-        //click on the invite button
         cy.datacyClick('inviteUser')
-        // check popup form
         cy.visible('Invite New User')
         cy.datacyClick('Add User')
     }
 
     static inviteUsers(user: object, type: string) {
-        // select the internal option
-        // fill out the form
         cy.userType(type)
         cy.selectInput('salutation', user['Salutation'])
         cy.typeInput('firstname', user['FirstName'])
@@ -32,19 +30,51 @@ export default class UserManagement {
         cy.selectInput('language', user['Language'])
         cy.selectOption('userType', user['Type'])
         if(type == 'External Users') {
-            cy.typeInput('Customer Name', user['CustomerName'])
+            cy.typeInput('Customer Name', user['CustomerName']).then(() => {
+                cy.get('mat-option').each(($option) => {
+                    cy.wrap($option).invoke('text').then((text) => {
+                        if (text.includes(user['CustomerName'])) {
+                            cy.wrap($option).click()
+                        }
+                    })
+                })
+            })
             cy.selectOption('signOrderOnline', user['SignOrderOnline'])
         }
     }
 
+    static checkContent(userType: string, user: object) {
+        cy.datacyClick(userType)
+        cy.datacy('pagination').within( function(){
+            cy.get('.mat-paginator-range-label').invoke('text').then(totalNumber => {
+                let num = parseInt(totalNumber.split('of ')[1])
+                cy.wrap(num).as('totalNumber')
+            })
+            cy.get('[aria-label="Items per page"]').invoke('text').then(perPage => {
+                let page = parseInt(perPage)
+                cy.wrap(page).as('perPage')
+            })
+            cy.then( function(){
+                let totalPage = Math.floor(this.totalNumber/this.perPage)
+                if (this.totalNumber%this.perPage !== 0)  ++totalPage
+                cy.wrap(totalPage).as('totalPage')
+                cy.log(`Total user = ${this.totalNumber}, per page = ${this.perPage} total pages = ${totalPage}`)
+            })
+        }) 
+        cy.then( function(){
+            tablePages(this.totalPage, user)
+        }) 
+    }
 
-    static inviteButton(userType: string, user: object, option: string) {
-        // enter save
-        cy.datacyClick(option)
-        // verify info saved
-        
-        cy.visible('User invited successfully')
-        cy.checkContent(userType, user, 'contain.text')
+    static searchUser(userType: string, user: object) {
+        cy.datacyClick(userType)
+        cy.get('.temporary-layout').within(() => {
+            cy.get('h2').should('have.text', userType)
+            cy.datacy('search').clear().type(user['Email'])
+        })
+        cy.get('table tbody').within(($ele) => {
+            cy.datacy('E-Mail').should('have.length', 1).and('include.text', user['Email'])
+        })
     }
 
     static errorMessage(mess: string, length: number) {
@@ -58,16 +88,5 @@ export default class UserManagement {
         })
     }
 
-    // static editUser(email: string) {
-    //     // select the edit button using email
-    //     // check popup form
-    //     // enter new info
-    //     // save and verify the new info  
-    // }
-
-    static deleteUser(confirmation: string) {
-        // check pop up
-        // press either confirmation
-        cy.visible('User deleted successfully')
-    }
+    
 }

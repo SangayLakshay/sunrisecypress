@@ -12,9 +12,11 @@
   "dependencies": {
     "chai": "^4.3.7",
     "cypress": "^12.17.1",
+    "dotenv": "^16.3.1",
     "mocha": "^10.2.0"
   },
   "devDependencies": {
+    "cypress-mailosaur": "^2.13.0",
     "typescript": "^5.1.6"
   }
 }
