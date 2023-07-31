@@ -23,18 +23,18 @@ describe('Admin user', () => {
 
     it('should try to submit directly', () => {
         cy.datacyClick('Add User')
-        UserManagement.errorMessage('This field is required.', 1)
+        UserManagement.errorMessage('This field is required.')
     })
 
     it('should try to submit empty fields', () => { 
         cy.userType('Internal Users')
-        UserManagement.errorMessage('This field is required.', 8)
+        UserManagement.errorMessage('This field is required.')
     })
 
     it('should enter user with different values and give error messages', () => {
         internalUserVal.forEach((user) => {
             UserManagement.inviteUsers(user, 'Internal Users')
-            UserManagement.errorMessage(user.error, 1)
+            UserManagement.errorMessage(user.error)
         })
     })
     
@@ -52,13 +52,13 @@ describe('Admin user', () => {
 
     it('should try to submit empty fields', () => { 
         cy.userType('External Users')
-        UserManagement.errorMessage('This field is required.', 8)
+        UserManagement.errorMessage('This field is required.')
     })
 
     it('should enter user with different values and give error messages', () => {
         externalUserVal.forEach((user) => {
             UserManagement.inviteUsers(user, 'External Users')
-            UserManagement.errorMessage(user.error, 1)
+            UserManagement.errorMessage(user.error)
         })
     })
 

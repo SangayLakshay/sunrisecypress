@@ -77,7 +77,7 @@ export default class UserManagement {
         })
     }
 
-    static errorMessage(mess: string, length: number) {
+    static errorMessage(mess: string) {
         cy.get('whs-user-create-modal').within(() => {
             cy.get('mat-error').not('.hide').then(($err) => {
                 cy.wrap($err).each(($ele) => {

@@ -16,7 +16,8 @@ module.exports = defineConfig({
   defaultCommandTimeout: 10000,
 
   env: {
-    example: 'Hello'
+    "serverId": "peujgzoz",
+    "MAILOSAUR_API_KEY": "Uj9x224TbFSfCyan"
   },
 
   e2e: {
