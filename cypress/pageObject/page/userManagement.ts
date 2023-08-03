@@ -1,4 +1,5 @@
-import { tablePages } from "../components/tablePagination"
+import { TablePages } from "../components/tablePagination"
+import { UserType,  User } from "../../support/utils"
 
 export default class UserManagement {
     static getUserPage() {
@@ -19,32 +20,32 @@ export default class UserManagement {
         cy.datacyClick('Add User')
     }
 
-    static inviteUsers(user: object, type: string) {
-        cy.userType(type)
-        cy.selectInput('salutation', user['Salutation'])
-        cy.typeInput('firstname', user['FirstName'])
-        cy.typeInput('lastname', user['LastName'])
-        cy.typeInput('email', user['Email'])
-        cy.typeInput('phone', user['Phone'])
-        cy.selectInput('role', user['Role'])
-        cy.selectInput('language', user['Language'])
-        cy.selectOption('userType', user['Type'])
-        if(type == 'External Users') {
-            cy.typeInput('Customer Name', user['CustomerName']).then(() => {
+    static inviteUsers(user: User) {
+        cy.userType(user.userType)
+        cy.selectInput('salutation', user.salutation)
+        cy.typeInput('firstname', user.firstName)
+        cy.typeInput('lastname', user.lastName)
+        cy.typeInput('email', user.email)
+        cy.typeInput('phone', user.phone)
+        cy.selectInput('role', user.role)
+        cy.selectInput('language', user.language)
+        cy.selectOption('userType', user.type)
+        if(user.userType === UserType.externalUser) {
+            cy.typeInput('Customer Name', user.customerName).then(() => {
                 cy.get('mat-option').each(($option) => {
                     cy.wrap($option).invoke('text').then((text) => {
-                        if (text.includes(user['CustomerName'])) {
+                        if (text.includes(user.customerName)) {
                             cy.wrap($option).click()
                         }
                     })
                 })
             })
-            cy.selectOption('signOrderOnline', user['SignOrderOnline'])
+            cy.selectOption('signOrderOnline', user.signOrderOnline)
         }
     }
 
-    static checkContent(userType: string, user: object) {
-        cy.datacyClick(userType)
+    static checkContent(user: User) {
+        cy.datacyClick(user.userType)
         cy.datacy('pagination').within( function(){
             cy.get('.mat-paginator-range-label').invoke('text').then(totalNumber => {
                 let num = parseInt(totalNumber.split('of ')[1])
@@ -62,18 +63,18 @@ export default class UserManagement {
             })
         }) 
         cy.then( function(){
-            tablePages(this.totalPage, user)
+            TablePages(this.totalPage, user)
         }) 
     }
 
-    static searchUser(userType: string, user: object) {
-        cy.datacyClick(userType)
+    static searchUser(user: User) {
+        cy.datacyClick(user.userType)
         cy.get('.temporary-layout').within(() => {
-            cy.get('h2').should('have.text', userType)
-            cy.datacy('search').clear().type(user['Email'])
+            cy.get('h2').should('have.text', user.userType)
+            cy.datacy('search').clear().type(user.email)
         })
         cy.get('table tbody').within(($ele) => {
-            cy.datacy('E-Mail').should('have.length', 1).and('include.text', user['Email'])
+            cy.datacy('E-Mail').should('have.length', 1).and('include.text', user.email)
         })
     }
 
@@ -86,7 +87,5 @@ export default class UserManagement {
             })
             cy.datacyClick('Add User').and('have.class', 'cdk-focused')
         })
-    }
-
-    
+    }    
 }

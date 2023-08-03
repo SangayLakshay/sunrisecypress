@@ -1,4 +1,3 @@
-
 Cypress.Commands.add("input", (input: string) => { cy.get('input').clear().type(input) })
 
 Cypress.Commands.add("datacy",(selector: string) => { cy.get(`[data-cy='${selector}']`) })
