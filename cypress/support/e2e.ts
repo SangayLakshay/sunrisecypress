@@ -1,6 +1,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
-import './utils'
+import '../pageObject/support/utils'
 
 //support/command.ts
 import 'cypress-mailosaur';
@@ -20,6 +20,8 @@ declare global {
         login(email: string, password: string): Chainable<Element>
         userType(type: string): Chainable<Element>
         checkContent(userType: string, user: object): Chainable<Element> 
+        popUpMessage(message: string): Chainable<Element> 
+        typeSelect(dataCy: string, customerName: string): Chainable<Element> 
       }
     }
   }

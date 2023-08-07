@@ -11,7 +11,6 @@ Cypress.Commands.add('selection', (selector: string) => { cy.contains(selector).
 Cypress.Commands.add('datacyClick', (selector: string) => { cy.datacy(selector).click()})
 
 Cypress.Commands.add('typeInput', (dataCy: string, input: string) => {
-    cy.datacyClick(dataCy)
     cy.datacy(dataCy).within(() => {
         cy.input(input)
     })
@@ -40,5 +39,23 @@ Cypress.Commands.add('login', (email: string, password: string) => {
 Cypress.Commands.add('userType', (type: string) => {
     cy.get('whs-user-create-modal').within(() => {
         cy.datacyClick(type)
+    })
+})
+
+Cypress.Commands.add('popUpMessage', (message: string) => {
+    cy.visible(message).then(() => {
+        cy.contains('close').click()
+    })
+})
+
+Cypress.Commands.add('typeSelect', (dataCy: string, customerName: string) => {
+    cy.typeInput(dataCy, customerName).then(() => {
+        cy.get('mat-option').each(($option) => {
+            cy.wrap($option).invoke('text').then((text) => {
+                if (text.includes(customerName)) {
+                    cy.wrap($option).click()
+                }
+            })
+        })
     })
 })

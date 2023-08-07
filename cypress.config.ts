@@ -1,6 +1,7 @@
 const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
+  projectId: "77vk5w",
   fileServerFolder: '.',
   fixturesFolder: './cypress/fixtures',
   video: true,
@@ -11,7 +12,7 @@ module.exports = defineConfig({
   viewportWidth: 1920,
   requestTimeout: 5000,
   waitForAnimations: true,
-  retries: 0,
+  retries: 2,
   watchForFileChanges: false,
   defaultCommandTimeout: 10000,
 

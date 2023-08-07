@@ -1,4 +1,4 @@
-import { User } from "../../support/utils"
+import { User } from "../support/utils"
 
 export const NextTable = () => {
     cy.datacy('pagination').within(() => {
@@ -6,27 +6,40 @@ export const NextTable = () => {
     })
 }
 
+export const getTotalPage = () =>  {
+    return ( cy.datacy('pagination').within( function(){
+        cy.get('.mat-paginator-range-label').invoke('text').then(totalNumber => {
+            let num = parseInt(totalNumber.split('of ')[1])
+            cy.wrap(num).as('totalNumber')
+        })
+        cy.get('[aria-label="Items per page"]').invoke('text').then(perPage => {
+            let page = parseInt(perPage)
+            cy.wrap(page).as('perPage')
+        })
+        cy.then( function(){
+            let totalPage = Math.floor(this.totalNumber/this.perPage)
+            if (this.totalNumber%this.perPage !== 0)  ++totalPage
+            cy.wrap(totalPage).as('totalPage')
+        })
+    }) 
+    )
+}
+
 export const TablePages = (pages:number, user:User) => { 
     cy.get('tbody').then(($tbody) => {
-        cy.log(`First ${pages}`)
         if ( pages > 1) {
             cy.wrap($tbody).then(() => {
-                cy.datacy('E-Mail').each(($email) => {
+                cy.datacy('E-Mail').each( ($email) => {
                     cy.wrap($email).invoke('text').then((text) => {
-                        cy.log(`each email ${pages}`)
-                        // cy.log(text + ' ' + user['Email'])
                         if(text.includes(user.email)) {
-                            cy.log(`Email found ${text}`)
-                            pages = 0
                             cy.log(`matched email${pages}`)
                             return false
                         }
                     })
                 })
                 NextTable()
-                cy.log(`before recursion ${pages}`)
                 TablePages( --pages, user)
             })
-        } 
+        }
     })
 }

@@ -1,4 +1,4 @@
-import { User } from "../../support/utils"
+import { User } from "../support/utils"
 
 export class Email {
     static checkMail(email: string) {
@@ -23,7 +23,7 @@ export class Email {
         cy.typeInput('password', user.password)
         cy.typeInput('cPassword', user.password)
         cy.datacyClick('Accept').then(() => {
-          cy.visible('Invitation accepted successfully')
+          cy.popUpMessage('Invitation accepted successfully')
         })
       })
 

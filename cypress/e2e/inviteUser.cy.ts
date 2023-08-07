@@ -2,46 +2,51 @@ import Login from "../pageObject/page/login";
 import UserManagement from "../pageObject/page/userManagement";
 import loginCred from '../fixtures/loginCred.json';
 import { Email } from "../pageObject/components/email";
-import { UserRole, User, user } from "../support/utils";
+import { UserRole, User, UserType, internalUser, externalUser } from "../pageObject/support/utils";
 
 describe('Admin user', () => {
   before(() => {
     cy.clearAllLocalStorage()
-    globalThis.user = user()
+    globalThis.internalUser = internalUser()
+    globalThis.externalUser = externalUser()
     cy.visit('/')
   })
 
   it('should login', () => {
-    cy.writeFile('cypress/fixtures/userDetails.json', globalThis.user)
+    cy.writeFile('cypress/fixtures/internalUser.json', globalThis.internalUser)
+    cy.writeFile('cypress/fixtures/externalUser.json', globalThis.externalUser)
     Login.logIn(loginCred)
   })
 
   it('should set role to admin and go to the usermangement page', () => {
-    UserManagement.setRole(UserRole.admin)
     UserManagement.getUserPage()
+    UserManagement.setRole(UserRole.admin)
   })
 
-  it('should invite internal user', () => {
-    inviteUser(globalThis.user)
+  it('should invite user', () => {
+    UserManagement.inviteUser(globalThis.internalUser, UserType.internalUsers)
+    UserManagement.inviteUser(globalThis.externalUser, UserType.externalUser)
   })
 
-  it('should accept invitation', () => {
-    Email.acceptInvite(globalThis.user)
+  it('internal user should accept invitation', () => {
+    Email.checkMail(globalThis.internalUser.email)
+    Email.acceptInvite(globalThis.internalUser)
   })
 
   it('should login with new password', () => {
-    Login.logIn(globalThis.user)
+    Login.logIn(globalThis.internalUser)
+    Login.logOut()
+  })
+
+  it('external user should accept invitation', () => {
+    Email.checkMail(globalThis.externalUser.email)
+    Email.acceptInvite(globalThis.externalUser)
+  })
+
+  it('should login with new password', () => {
+    Login.logIn(globalThis.internalUser)
+    Login.logOut()
   })
 })
 
-const inviteUser = (userObject: User) => {
-  UserManagement.clickInviteUser()
-  UserManagement.inviteUsers(userObject)
-  cy.datacyClick('Add User').then(() => {
-      cy.visible('User invited successfully')
-      cy.wait(2000)
-      UserManagement.searchUser(userObject)
-      Email.checkMail(userObject.email)
-      cy.wait(1000)
-  })
-}
+

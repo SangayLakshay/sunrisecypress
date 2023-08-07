@@ -1,5 +1,5 @@
-import { TablePages } from "../components/tablePagination"
-import { UserType,  User } from "../../support/utils"
+import { TablePages, getTotalPage } from "../components/tablePagination"
+import { UserType,  User } from "../support/utils"
 
 export default class UserManagement {
     static getUserPage() {
@@ -11,7 +11,6 @@ export default class UserManagement {
     static setRole(role: string) {
         cy.datacyClick('profile')
         cy.selection(' Switch to '+role)
-        cy.datacyClick('profile')
     }
 
     static clickInviteUser() {
@@ -20,57 +19,36 @@ export default class UserManagement {
         cy.datacyClick('Add User')
     }
 
-    static inviteUsers(user: User) {
-        cy.userType(user.userType)
-        cy.selectInput('salutation', user.salutation)
-        cy.typeInput('firstname', user.firstName)
-        cy.typeInput('lastname', user.lastName)
-        cy.typeInput('email', user.email)
-        cy.typeInput('phone', user.phone)
-        cy.selectInput('role', user.role)
-        cy.selectInput('language', user.language)
+    static inviteUsers(user: User, userType: string) {
+        cy.userType(userType)
+        const datacySelection = ['salutation', 'role', 'language']
+        const datacyInput = ['firstname', 'lastname', 'email', 'phone']
+        
+        datacyInput.forEach((data) => {
+            cy.typeInput(data, user[`${data}`])
+        })
+        datacySelection.forEach((data) => {
+            cy.selectInput(data, user[`${data}`])
+        })
         cy.selectOption('userType', user.type)
-        if(user.userType === UserType.externalUser) {
-            cy.typeInput('Customer Name', user.customerName).then(() => {
-                cy.get('mat-option').each(($option) => {
-                    cy.wrap($option).invoke('text').then((text) => {
-                        if (text.includes(user.customerName)) {
-                            cy.wrap($option).click()
-                        }
-                    })
-                })
-            })
+        if(userType === UserType.externalUser) {
+            cy.typeSelect('Customer Name', user.customerName)
             cy.selectOption('signOrderOnline', user.signOrderOnline)
         }
     }
 
-    static checkContent(user: User) {
-        cy.datacyClick(user.userType)
-        cy.datacy('pagination').within( function(){
-            cy.get('.mat-paginator-range-label').invoke('text').then(totalNumber => {
-                let num = parseInt(totalNumber.split('of ')[1])
-                cy.wrap(num).as('totalNumber')
-            })
-            cy.get('[aria-label="Items per page"]').invoke('text').then(perPage => {
-                let page = parseInt(perPage)
-                cy.wrap(page).as('perPage')
-            })
-            cy.then( function(){
-                let totalPage = Math.floor(this.totalNumber/this.perPage)
-                if (this.totalNumber%this.perPage !== 0)  ++totalPage
-                cy.wrap(totalPage).as('totalPage')
-                cy.log(`Total user = ${this.totalNumber}, per page = ${this.perPage} total pages = ${totalPage}`)
-            })
-        }) 
+    static checkContent(user: User, userType: string) {
+        cy.datacyClick(userType)
+        getTotalPage()
         cy.then( function(){
             TablePages(this.totalPage, user)
         }) 
     }
 
-    static searchUser(user: User) {
-        cy.datacyClick(user.userType)
+    static searchUser(user: User, userType: string) {
+        cy.datacyClick(userType)
         cy.get('.temporary-layout').within(() => {
-            cy.get('h2').should('have.text', user.userType)
+            cy.get('h2').should('have.text', userType)
             cy.datacy('search').clear().type(user.email)
         })
         cy.get('table tbody').within(($ele) => {
@@ -87,5 +65,14 @@ export default class UserManagement {
             })
             cy.datacyClick('Add User').and('have.class', 'cdk-focused')
         })
-    }    
+    }  
+    
+    static inviteUser(userObject: User, userType: string){
+        UserManagement.clickInviteUser()
+        UserManagement.inviteUsers(userObject, userType)
+        cy.datacyClick('Add User').then(() => {
+            cy.popUpMessage('User invited successfully')
+            UserManagement.searchUser(userObject, userType)
+        })
+    }
 }
