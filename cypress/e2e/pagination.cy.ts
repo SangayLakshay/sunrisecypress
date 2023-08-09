@@ -1,7 +1,7 @@
 import Login from "../pageObject/page/login";
 import UserManagement from "../pageObject/page/userManagement";
 import loginCred from '../fixtures/loginCred.json'
-import { UserRole, UserType} from "../pageObject/support/utils";
+import { UserRoleInternal, UserType} from "../pageObject/support/utils";
 import internalUser from '../fixtures/internalUser.json'
 
 describe('Admin user', () => {
@@ -16,7 +16,7 @@ describe('Admin user', () => {
 
   it('should set role to admin and go to usermanagement', () => {
     UserManagement.getUserPage()
-    UserManagement.setRole(UserRole.admin)
+    UserManagement.setRole(UserRoleInternal.admin)
   })
 
   it('should find user in table', () => {

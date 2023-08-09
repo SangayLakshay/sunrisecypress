@@ -6,15 +6,21 @@ export const enum UserType {
     externalUser = 'External Users'
   }
   
-export const enum UserRole {
+export enum UserRoleInternal {
     admin = 'Admin',
     sales = 'Sales',
     presales = 'Presales',
     pim= 'PIM'
   }
 
+export enum UserRoleExternal {
+  customerAdmin = 'Customer Admin', 
+  user = 'User', 
+  partner = 'Partner'
+}
+
 export interface User {
-    salutation:string,
+    salutation:string, 
     firstname:string,
     lastname:string,
     email:string,
@@ -27,28 +33,14 @@ export interface User {
     password?:string
   }
 
-export const internalUser = (): User => { 
+export const user = (roles: Array<string>): User => { 
   return {
     salutation : rand(['Mr', 'Ms']),
     firstname : randFirstName(),
     lastname : randLastName(),
     phone : '+975 17'+ String(Math.random()).substring(2,8),
     email : Email.generateMail(),
-    role : rand(['Admin', 'Sales', 'Presales', 'PIM']),
-    language: 'English',
-    type : rand(['Formal', 'Informal']),
-    password : randPassword()
-  }
-};
-
-export const externalUser = (): User => { 
-  return {
-    salutation : rand(['Mr', 'Ms']),
-    firstname : randFirstName(),
-    lastname : randLastName(),
-    phone : '+975 17'+ String(Math.random()).substring(2,8),
-    email : Email.generateMail(),
-    role : rand(['Customer Admin', 'User', 'Partner']),
+    role : rand(roles),
     language: 'English',
     type : rand(['Formal', 'Informal']),
     signOrderOnline : rand(['Yes', 'No']),

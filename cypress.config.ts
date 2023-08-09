@@ -12,9 +12,9 @@ module.exports = defineConfig({
   viewportWidth: 1920,
   requestTimeout: 5000,
   waitForAnimations: true,
-  retries: 2,
+  retries: 0,
   watchForFileChanges: false,
-  defaultCommandTimeout: 10000,
+  defaultCommandTimeout: 15000,
 
   env: {
     "serverId": "peujgzoz",
