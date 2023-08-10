@@ -1,7 +1,7 @@
-import Login from "../pageObject/page/login";
-import UserManagement from "../pageObject/page/userManagement";
+import Login from '../pageObject/page/login';
+import UserManagement from '../pageObject/page/userManagement';
 import loginCred from '../fixtures/loginCred.json'
-import { UserRoleInternal, UserType} from "../pageObject/support/utils";
+import { UserRoleInternal, UserType} from '../pageObject/support/utils';
 import internalUser from '../fixtures/internalUser.json'
 
 describe('Admin user', () => {

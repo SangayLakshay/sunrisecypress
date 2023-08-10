@@ -1,4 +1,4 @@
-import Login from "../pageObject/page/login";
+import Login from '../pageObject/page/login';
 import loginCred from '../fixtures/loginCred.json'
 
 describe('User', () => {

@@ -1,5 +1,5 @@
-import { TablePages, getTotalPage } from "../components/tablePagination"
-import { UserType,  User } from "../support/utils"
+import { TablePages, getTotalPage } from '../components/tablePagination'
+import { UserType,  User } from '../support/utils'
 
 export default class UserManagement {
     static getUserPage() {
@@ -47,10 +47,12 @@ export default class UserManagement {
 
     static searchUser(user: User, userType: string) {
         cy.datacyClick(userType)
+        
         cy.get('.temporary-layout').within(() => {
             cy.get('h2').should('have.text', userType)
             cy.datacy('search').clear().type(user.email)
         })
+        
         cy.get('table tbody').within(($ele) => {
             cy.datacy('E-Mail').should('have.length', 1).and('include.text', user.email)
         })

@@ -1,8 +1,8 @@
-import Login from "../pageObject/page/login";
-import UserManagement from "../pageObject/page/userManagement";
+import Login from '../pageObject/page/login';
+import UserManagement from '../pageObject/page/userManagement';
 import loginCred from '../fixtures/loginCred.json';
-import { Email } from "../pageObject/components/email";
-import { UserRoleInternal, UserType, user } from "../pageObject/support/utils";
+import { Email } from '../pageObject/components/email';
+import { UserRoleInternal, UserType, user } from '../pageObject/support/utils';
 
 describe('Admin user', () => {
   before(() => {

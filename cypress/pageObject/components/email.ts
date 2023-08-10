@@ -1,4 +1,4 @@
-import { User } from "../support/utils"
+import { User } from '../support/utils'
 
 export class Email {
     static checkMail(email: string) {
